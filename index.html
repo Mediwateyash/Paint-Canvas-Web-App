@@ -3,48 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Paint Canvas Web App</title>
     <link rel="stylesheet" href="/Paint-Canvas-Web-App/style.css">
 </head>
 <body>
-    <div class="app-container">
-        <!-- Controls Section -->
-        <div class="controls">
-            <h1>Paint Canvas</h1>
-            <button id="clearBtn">Clear Canvas</button>
-            <button id="undoBtn">Undo</button>
-            <label for="brushSize">Brush Size:</label>
-            <input type="range" id="brushSize" min="1" max="50" value="5">
-            <label for="brushType">Brush Type:</label>
-            <select id="brushType">
-                <option value="round">Round</option>
-                <option value="square">Square</option>
-            </select>
-            <label for="colorPicker">Choose Brush Color:</label>
-            <input type="color" id="colorPicker" value="#000000">
+    <div class="container">
+        <!-- Sidebar for Controls -->
+        <div id="controls">
+            <h2>Paint App</h2>
             
-            <!-- Shape Tools -->
-            <h3>Shape Tools</h3>
-            <button id="drawCircle">Circle</button>
-            <button id="drawRectangle">Rectangle</button>
-            <button id="drawLine">Line</button>
+            <!-- Brush Settings -->
+            <div>
+                <label for="brushSize">Brush Size</label>
+                <input type="range" id="brushSize" min="1" max="50" value="5">
+            </div>
 
-            <!-- Eraser Tool -->
-            <h3>Eraser</h3>
-            <button id="eraserBtn">Eraser</button>
+            <div>
+                <label for="brushType">Brush Type</label>
+                <select id="brushType">
+                    <option value="round">Round</option>
+                    <option value="square">Square</option>
+                </select>
+            </div>
 
-            <button id="saveBtn">Save Drawing</button>
+            <div>
+                <label for="colorPicker">Brush Color</label>
+                <input type="color" id="colorPicker" value="#000000">
+            </div>
+
+            <div>
+                <button id="drawCircle">Circle</button>
+                <button id="drawRectangle">Rectangle</button>
+                <button id="drawLine">Line</button>
+            </div>
+
+            <div>
+                <button id="eraserBtn">Enable Eraser</button>
+                <button id="clearBtn">Clear Canvas</button>
+            </div>
+
+            <div>
+                <button id="undoBtn">Undo</button>
+                <button id="saveBtn">Save Drawing</button>
+            </div>
         </div>
 
-        <!-- Canvas Section -->
+        <!-- Canvas Area -->
         <canvas id="paintCanvas"></canvas>
     </div>
 
-    <!-- Footer Section -->
-    <footer>
-        <p>Design and Developed by <a href="https://github.com/Mediwateyash" target="_blank">GitHub - Diwate Yash</a></p>
-        <p>&copy; 2025 Notes Cloud by DY. All rights reserved.</p>
-    </footer>
+    <!-- Footer -->
+    <div id="footer">
+        <p>Designed and Developed by <a href="https://github.com/diwateyash" target="_blank">Yash Diwate</a>. &copy; Notes Cloud by DY</p>
+    </div>
 
     <script src="/Paint-Canvas-Web-App/script.js"></script>
 </body>

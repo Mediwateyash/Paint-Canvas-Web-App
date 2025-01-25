@@ -1,123 +1,118 @@
-/* General Styles */
-body, html {
+* {
     margin: 0;
     padding: 0;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    background-color: #f9f9f9;
+    box-sizing: border-box;
+}
+
+body {
     font-family: 'Arial', sans-serif;
-    flex-direction: column; /* Make the body a column flex container */
-}
-
-.app-container {
+    background-color: #f4f4f9;
     display: flex;
-    justify-content: flex-start;
-    align-items: stretch;
-    flex-grow: 1; /* Make the app-container stretch to fill available space */
-}
-
-.controls {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    width: 220px; /* Fixed width for controls */
-    position: sticky;
-    top: 0; /* Keep the controls sticky */
+    justify-content: center;
+    align-items: center;
     height: 100vh;
 }
 
-h1 {
+.container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 1200px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#paintCanvas {
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    margin-left: 10px;
+    border-radius: 5px;
+    flex-grow: 1;
+}
+
+#controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #4CAF50;
+    width: 220px;
+    height: 100vh;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#controls h2 {
+    color: #fff;
     margin-bottom: 20px;
-    font-size: 1.5rem;
-    color: #333;
+    font-size: 24px;
     text-align: center;
 }
 
-button, input[type="color"], input[type="range"], select {
-    margin-bottom: 15px;
-    padding: 10px;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 5px;
+button, input[type="range"], input[type="color"] {
+    background-color: #fff;
+    color: #333;
     border: none;
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-input[type="color"] {
+    border-radius: 5px;
+    margin: 8px 0;
+    padding: 10px;
+    font-size: 16px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-input[type="range"] {
+button:hover, input[type="range"]:hover, input[type="color"]:hover {
+    background-color: #d4d4d4;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button#clearBtn {
+    background-color: #f44336;
+    color: #fff;
+}
+
+button#clearBtn:hover {
+    background-color: #ff1f1f;
+}
+
+button#eraserBtn {
+    background-color: #ffeb3b;
+}
+
+button#eraserBtn:hover {
+    background-color: #ffdd22;
+}
+
+#controls div {
+    margin-bottom: 20px;
+}
+
+#brushSize {
     width: 100%;
 }
 
-select {
-    font-size: 14px;
-}
-
-#paintCanvas {
-    width: calc(100% - 240px); /* Take up full width minus controls width */
-    height: 100vh;
-    background-color: #fff;
-    cursor: crosshair;
-    border: 1px solid #000;
-}
-/* Additional Styles for Shape Tools and Eraser */
-button {
-    margin-bottom: 15px;
-    padding: 10px;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 5px;
-    border: none;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-h3 {
-    margin-top: 20px;
-    color: #333;
-}
-
-/* Adjust Canvas size if needed */
-#paintCanvas {
-    width: calc(100% - 240px); /* Full width minus control panel */
-    height: 100vh;
-    background-color: #fff;
-    cursor: crosshair;
-    border: 1px solid #000;
-}
-
-/* Footer Styles */
-footer {
-    padding: 10px;
-    background-color: #333;
-    color: white;
+#footer {
     text-align: center;
     font-size: 14px;
+    color: #aaa;
+    background-color: #222;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
     border-top: 1px solid #444;
 }
 
-footer a {
-    color: #4CAF50;
+#footer a {
+    color: #fff;
     text-decoration: none;
 }
 
-footer a:hover {
+#footer a:hover {
     text-decoration: underline;
 }

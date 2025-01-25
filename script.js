@@ -1,132 +1,167 @@
-// Setup Canvas
 const canvas = document.getElementById('paintCanvas');
 const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth - 240;  // Adjust for controls width
-canvas.height = window.innerHeight;
 
-// Variables
-let isDrawing = false;
-let lastX = 0;
-let lastY = 0;
+// Canvas size
+canvas.width = window.innerWidth - 300;  // Adjust width according to sidebar
+canvas.height = window.innerHeight - 100;  // Adjust height
+
+let painting = false;
+let erasing = false;
 let brushSize = 5;
 let brushType = 'round';
 let brushColor = '#000000';
-let drawingShape = null;
-let eraserMode = false;
+let startX = 0;
+let startY = 0;
+let currentShape = 'free';  // Default shape is 'free' drawing
+let undoStack = [];
+let shapes = [];
 
-// Setup Brush Size and Color
-document.getElementById('brushSize').addEventListener('input', (e) => {
-    brushSize = e.target.value;
-});
+// Function to start drawing
+function startPosition(e) {
+    painting = true;
+    startX = e.offsetX;
+    startY = e.offsetY;
+}
 
-document.getElementById('brushType').addEventListener('change', (e) => {
-    brushType = e.target.value;
-});
-
-document.getElementById('colorPicker').addEventListener('input', (e) => {
-    brushColor = e.target.value;
-});
-
-// Start Drawing
-canvas.addEventListener('mousedown', (e) => {
-    isDrawing = true;
-    [lastX, lastY] = [e.offsetX, e.offsetY];
-});
-
-canvas.addEventListener('mousemove', (e) => {
-    if (!isDrawing) return;
-    if (eraserMode) {
-        // Eraser Logic
-        ctx.clearRect(e.offsetX - brushSize / 2, e.offsetY - brushSize / 2, brushSize, brushSize);
-    } else if (drawingShape) {
-        // Drawing Shapes Logic
-        drawShape(e);
-    } else {
-        // Drawing Freehand
-        draw(e);
+// Function to stop drawing
+function stopPosition() {
+    painting = false;
+    if (currentShape !== 'free') {
+        undoStack.push(canvas.toDataURL());
+        shapes.push({ shape: currentShape, x: startX, y: startY, size: brushSize, color: brushColor, endX: startX, endY: startY });
     }
-});
-
-canvas.addEventListener('mouseup', () => {
-    isDrawing = false;
     ctx.beginPath();
-});
+}
 
-canvas.addEventListener('mouseout', () => {
-    isDrawing = false;
-    ctx.beginPath();
-});
-
-// Freehand Drawing Function
+// Function to draw on canvas (free drawing or shapes)
 function draw(e) {
+    if (!painting) return;
+    if (erasing) {
+        ctx.globalCompositeOperation = 'destination-out';  // Eraser mode
+    } else {
+        ctx.globalCompositeOperation = 'source-over';  // Drawing mode
+    }
+
     ctx.lineWidth = brushSize;
     ctx.lineCap = brushType;
     ctx.strokeStyle = brushColor;
-    ctx.lineTo(e.offsetX, e.offsetY);
-    ctx.stroke();
-    [lastX, lastY] = [e.offsetX, e.offsetY];
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-}
 
-// Shape Drawing Function
-function drawShape(e) {
-    const width = e.offsetX - lastX;
-    const height = e.offsetY - lastY;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear the canvas before drawing
-    ctx.beginPath();
-    if (drawingShape === 'circle') {
-        ctx.arc(lastX, lastY, Math.sqrt(width * width + height * height), 0, Math.PI * 2);
-    } else if (drawingShape === 'rectangle') {
-        ctx.rect(lastX, lastY, width, height);
-    } else if (drawingShape === 'line') {
-        ctx.moveTo(lastX, lastY);
+    if (currentShape === 'free') {
         ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+    } else {
+        let width, height;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear canvas to redraw all shapes
+        drawShapes();
+        if (currentShape === 'circle') {
+            let radius = Math.abs(startX - e.offsetX);
+            ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+        } else if (currentShape === 'rectangle') {
+            width = e.offsetX - startX;
+            height = e.offsetY - startY;
+            ctx.rect(startX, startY, width, height);
+            ctx.stroke();
+        } else if (currentShape === 'line') {
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+        }
     }
-    ctx.strokeStyle = brushColor;
-    ctx.lineWidth = brushSize;
-    ctx.stroke();
 }
 
-// Shape Button Click Events
-document.getElementById('drawCircle').addEventListener('click', () => {
-    drawingShape = 'circle';
+// Function to draw all shapes (from shapes array)
+function drawShapes() {
+    shapes.forEach(shapeObj => {
+        ctx.lineWidth = shapeObj.size;
+        ctx.strokeStyle = shapeObj.color;
+        if (shapeObj.shape === 'circle') {
+            ctx.beginPath();
+            let radius = Math.abs(shapeObj.x - shapeObj.endX);
+            ctx.arc(shapeObj.x, shapeObj.y, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+        } else if (shapeObj.shape === 'rectangle') {
+            let width = shapeObj.endX - shapeObj.x;
+            let height = shapeObj.endY - shapeObj.y;
+            ctx.beginPath();
+            ctx.rect(shapeObj.x, shapeObj.y, width, height);
+            ctx.stroke();
+        } else if (shapeObj.shape === 'line') {
+            ctx.beginPath();
+            ctx.moveTo(shapeObj.x, shapeObj.y);
+            ctx.lineTo(shapeObj.endX, shapeObj.endY);
+            ctx.stroke();
+        }
+    });
+}
+
+// Event listeners
+canvas.addEventListener('mousedown', startPosition);
+canvas.addEventListener('mouseup', stopPosition);
+canvas.addEventListener('mousemove', draw);
+
+// Set brush size from the slider
+document.getElementById('brushSize').addEventListener('input', function(e) {
+    brushSize = e.target.value;
 });
 
-document.getElementById('drawRectangle').addEventListener('click', () => {
-    drawingShape = 'rectangle';
+// Set brush type from the dropdown
+document.getElementById('brushType').addEventListener('change', function(e) {
+    brushType = e.target.value;
 });
 
-document.getElementById('drawLine').addEventListener('click', () => {
-    drawingShape = 'line';
+// Set brush color from color picker
+document.getElementById('colorPicker').addEventListener('input', function(e) {
+    brushColor = e.target.value;
 });
 
-// Eraser Tool Logic
-document.getElementById('eraserBtn').addEventListener('click', () => {
-    eraserMode = !eraserMode;
-    if (eraserMode) {
-        document.getElementById('eraserBtn').textContent = 'Disable Eraser';
+// Shape selection
+document.getElementById('drawCircle').addEventListener('click', function() {
+    currentShape = 'circle';
+});
+
+document.getElementById('drawRectangle').addEventListener('click', function() {
+    currentShape = 'rectangle';
+});
+
+document.getElementById('drawLine').addEventListener('click', function() {
+    currentShape = 'line';
+});
+
+// Eraser tool
+document.getElementById('eraserBtn').addEventListener('click', function() {
+    erasing = !erasing;
+    if (erasing) {
+        document.getElementById('eraserBtn').style.backgroundColor = "#f44336"; // Eraser active
     } else {
-        document.getElementById('eraserBtn').textContent = 'Enable Eraser';
+        document.getElementById('eraserBtn').style.backgroundColor = "#ffeb3b"; // Eraser inactive
     }
 });
 
-// Clear Canvas
-document.getElementById('clearBtn').addEventListener('click', () => {
+// Clear canvas
+document.getElementById('clearBtn').addEventListener('click', function() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    undoStack = [];  // Clear undo history
+    shapes = [];     // Clear drawn shapes
 });
 
-// Undo Functionality (to be implemented if needed)
-document.getElementById('undoBtn').addEventListener('click', () => {
-    // You can add an undo stack to support this functionality
-    console.log('Undo function not yet implemented');
+// Undo last action
+document.getElementById('undoBtn').addEventListener('click', function() {
+    if (undoStack.length > 0) {
+        let lastState = undoStack.pop();
+        let img = new Image();
+        img.onload = function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+        }
+        img.src = lastState;
+    }
 });
 
-// Save Drawing
-document.getElementById('saveBtn').addEventListener('click', () => {
-    const dataUrl = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = 'drawing.png';
+// Save canvas as image
+document.getElementById('saveBtn').addEventListener('click', function() {
+    let link = document.createElement('a');
+    link.href = canvas.toDataURL();
+    link.download = 'paint-drawing.png';
     link.click();
 });
