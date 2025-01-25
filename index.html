@@ -9,17 +9,29 @@
 <body>
     <div class="container">
         <h1>Paint Canvas Web App</h1>
-        <canvas id="paintCanvas"></canvas>
         <div class="controls">
             <button id="clearBtn">Clear Canvas</button>
+            <button id="undoBtn">Undo</button>
+            <label for="brushSize">Brush Size:</label>
+            <input type="range" id="brushSize" min="1" max="50" value="5">
+            <label for="brushType">Brush Type:</label>
+            <select id="brushType">
+                <option value="round">Round</option>
+                <option value="square">Square</option>
+            </select>
             <label for="colorPicker">Choose Brush Color:</label>
             <input type="color" id="colorPicker" value="#000000">
+            <button id="saveBtn">Save Drawing</button>
         </div>
+        <canvas id="paintCanvas"></canvas>
     </div>
+
+    <!-- Footer Section -->
     <footer>
         <p>Design and Developed by <a href="https://github.com/Mediwateyash" target="_blank">GitHub - Diwate Yash</a></p>
-        <p>&copy; 2025 Notes Cloud by DY. </p>
+        <p>&copy; 2025 Notes Cloud by DY. All rights reserved.</p>
     </footer>
+
     <script src="/Paint-Canvas-Web-App/script.js"></script>
 </body>
 </html>

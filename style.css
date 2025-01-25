@@ -6,46 +6,54 @@ body, html {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    font-family: 'Arial', sans-serif;
 }
 
 .container {
     text-align: center;
     padding: 20px;
-    border-radius: 8px;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    flex: 1;  /* This ensures the container takes the remaining space */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 h1 {
     margin-bottom: 20px;
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: #333;
 }
 
 #paintCanvas {
+    width: 100%;
+    height: 80vh;
     border: 1px solid #000;
-    width: 600px;
-    height: 400px;
-    cursor: crosshair;
     background-color: #fff;
+    cursor: crosshair;
+    box-sizing: border-box;
 }
 
 .controls {
-    margin-top: 15px;
+    margin: 15px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+button, input[type="color"], input[type="range"], select {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
 }
 
 button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
     background-color: #4CAF50;
     color: white;
-    border: none;
-    border-radius: 5px;
-    margin-right: 10px;
 }
 
 button:hover {
@@ -54,7 +62,14 @@ button:hover {
 
 input[type="color"] {
     cursor: pointer;
-    margin-left: 10px;
+}
+
+input[type="range"] {
+    width: 120px;
+}
+
+select {
+    font-size: 16px;
 }
 
 /* Footer Styles */
