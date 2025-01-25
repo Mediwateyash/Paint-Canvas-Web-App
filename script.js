@@ -1,90 +1,132 @@
-// Get references to the canvas and controls
+// Setup Canvas
 const canvas = document.getElementById('paintCanvas');
 const ctx = canvas.getContext('2d');
-const clearBtn = document.getElementById('clearBtn');
-const undoBtn = document.getElementById('undoBtn');
-const colorPicker = document.getElementById('colorPicker');
-const brushSize = document.getElementById('brushSize');
-const brushType = document.getElementById('brushType');
-const saveBtn = document.getElementById('saveBtn');
+canvas.width = window.innerWidth - 240;  // Adjust for controls width
+canvas.height = window.innerHeight;
 
-// Set initial canvas size (full screen)
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight * 0.8;
-
-// Drawing variables
+// Variables
 let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
-let color = "#000000";
-let size = 5;
-let type = "round";
-let drawingHistory = [];
+let brushSize = 5;
+let brushType = 'round';
+let brushColor = '#000000';
+let drawingShape = null;
+let eraserMode = false;
 
-// Set initial brush color and size
-colorPicker.addEventListener('input', (e) => {
-    color = e.target.value;
+// Setup Brush Size and Color
+document.getElementById('brushSize').addEventListener('input', (e) => {
+    brushSize = e.target.value;
 });
 
-brushSize.addEventListener('input', (e) => {
-    size = e.target.value;
+document.getElementById('brushType').addEventListener('change', (e) => {
+    brushType = e.target.value;
 });
 
-brushType.addEventListener('change', (e) => {
-    type = e.target.value;
+document.getElementById('colorPicker').addEventListener('input', (e) => {
+    brushColor = e.target.value;
 });
 
-// Start drawing
+// Start Drawing
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
-    lastX = e.offsetX;
-    lastY = e.offsetY;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
 });
 
-// Stop drawing
-canvas.addEventListener('mouseup', () => {
-    isDrawing = false;
-    drawingHistory.push(ctx.getImageData(0, 0, canvas.width, canvas.height)); // Save current drawing state
-});
-
-// Draw on the canvas
 canvas.addEventListener('mousemove', (e) => {
     if (!isDrawing) return;
-
-    const x = e.offsetX;
-    const y = e.offsetY;
-    
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(x, y);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = size;
-    ctx.lineJoin = 'round';
-    ctx.lineCap = type;
-    ctx.stroke();
-    
-    lastX = x;
-    lastY = y;
-});
-
-// Clear the canvas
-clearBtn.addEventListener('click', () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawingHistory = []; // Clear history when canvas is cleared
-});
-
-// Undo the last drawing action
-undoBtn.addEventListener('click', () => {
-    if (drawingHistory.length > 0) {
-        ctx.putImageData(drawingHistory.pop(), 0, 0); // Revert to the last drawing state
+    if (eraserMode) {
+        // Eraser Logic
+        ctx.clearRect(e.offsetX - brushSize / 2, e.offsetY - brushSize / 2, brushSize, brushSize);
+    } else if (drawingShape) {
+        // Drawing Shapes Logic
+        drawShape(e);
+    } else {
+        // Drawing Freehand
+        draw(e);
     }
 });
 
-// Save the drawing as an image
-saveBtn.addEventListener('click', () => {
-    const dataURL = canvas.toDataURL("image/png");
+canvas.addEventListener('mouseup', () => {
+    isDrawing = false;
+    ctx.beginPath();
+});
+
+canvas.addEventListener('mouseout', () => {
+    isDrawing = false;
+    ctx.beginPath();
+});
+
+// Freehand Drawing Function
+function draw(e) {
+    ctx.lineWidth = brushSize;
+    ctx.lineCap = brushType;
+    ctx.strokeStyle = brushColor;
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+}
+
+// Shape Drawing Function
+function drawShape(e) {
+    const width = e.offsetX - lastX;
+    const height = e.offsetY - lastY;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear the canvas before drawing
+    ctx.beginPath();
+    if (drawingShape === 'circle') {
+        ctx.arc(lastX, lastY, Math.sqrt(width * width + height * height), 0, Math.PI * 2);
+    } else if (drawingShape === 'rectangle') {
+        ctx.rect(lastX, lastY, width, height);
+    } else if (drawingShape === 'line') {
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+    }
+    ctx.strokeStyle = brushColor;
+    ctx.lineWidth = brushSize;
+    ctx.stroke();
+}
+
+// Shape Button Click Events
+document.getElementById('drawCircle').addEventListener('click', () => {
+    drawingShape = 'circle';
+});
+
+document.getElementById('drawRectangle').addEventListener('click', () => {
+    drawingShape = 'rectangle';
+});
+
+document.getElementById('drawLine').addEventListener('click', () => {
+    drawingShape = 'line';
+});
+
+// Eraser Tool Logic
+document.getElementById('eraserBtn').addEventListener('click', () => {
+    eraserMode = !eraserMode;
+    if (eraserMode) {
+        document.getElementById('eraserBtn').textContent = 'Disable Eraser';
+    } else {
+        document.getElementById('eraserBtn').textContent = 'Enable Eraser';
+    }
+});
+
+// Clear Canvas
+document.getElementById('clearBtn').addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+// Undo Functionality (to be implemented if needed)
+document.getElementById('undoBtn').addEventListener('click', () => {
+    // You can add an undo stack to support this functionality
+    console.log('Undo function not yet implemented');
+});
+
+// Save Drawing
+document.getElementById('saveBtn').addEventListener('click', () => {
+    const dataUrl = canvas.toDataURL('image/png');
     const link = document.createElement('a');
-    link.href = dataURL;
+    link.href = dataUrl;
     link.download = 'drawing.png';
     link.click();
 });

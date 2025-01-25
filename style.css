@@ -75,6 +75,33 @@ select {
     cursor: crosshair;
     border: 1px solid #000;
 }
+/* Additional Styles for Shape Tools and Eraser */
+button {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+h3 {
+    margin-top: 20px;
+    color: #333;
+}
+
+/* Adjust Canvas size if needed */
+#paintCanvas {
+    width: calc(100% - 240px); /* Full width minus control panel */
+    height: 100vh;
+    background-color: #fff;
+    cursor: crosshair;
+    border: 1px solid #000;
+}
 
 /* Footer Styles */
 footer {
