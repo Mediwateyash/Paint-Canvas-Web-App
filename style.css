@@ -1,0 +1,77 @@
+/* General Styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex: 1;  /* This ensures the container takes the remaining space */
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #333;
+}
+
+#paintCanvas {
+    border: 1px solid #000;
+    width: 600px;
+    height: 400px;
+    cursor: crosshair;
+    background-color: #fff;
+}
+
+.controls {
+    margin-top: 15px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+input[type="color"] {
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* Footer Styles */
+footer {
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    border-top: 1px solid #444;
+}
+
+footer a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
