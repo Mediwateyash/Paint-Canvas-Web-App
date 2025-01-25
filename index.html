@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="/Paint-Canvas-Web-App/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Paint Canvas Web App</h1>
+    <div class="app-container">
+        <!-- Controls Section -->
         <div class="controls">
+            <h1>Paint Canvas</h1>
             <button id="clearBtn">Clear Canvas</button>
             <button id="undoBtn">Undo</button>
             <label for="brushSize">Brush Size:</label>
@@ -23,6 +24,8 @@
             <input type="color" id="colorPicker" value="#000000">
             <button id="saveBtn">Save Drawing</button>
         </div>
+
+        <!-- Canvas Section -->
         <canvas id="paintCanvas"></canvas>
     </div>
 

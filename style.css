@@ -4,48 +4,44 @@ body, html {
     padding: 0;
     height: 100%;
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
     background-color: #f9f9f9;
     font-family: 'Arial', sans-serif;
+    flex-direction: column; /* Make the body a column flex container */
 }
 
-.container {
-    text-align: center;
-    padding: 20px;
-    flex: 1;
+.app-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-grow: 1; /* Make the app-container stretch to fill available space */
+}
+
+.controls {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 220px; /* Fixed width for controls */
+    position: sticky;
+    top: 0; /* Keep the controls sticky */
+    height: 100vh;
 }
 
 h1 {
     margin-bottom: 20px;
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     color: #333;
-}
-
-#paintCanvas {
-    width: 100%;
-    height: 80vh;
-    border: 1px solid #000;
-    background-color: #fff;
-    cursor: crosshair;
-    box-sizing: border-box;
-}
-
-.controls {
-    margin: 15px 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
+    text-align: center;
 }
 
 button, input[type="color"], input[type="range"], select {
+    margin-bottom: 15px;
     padding: 10px;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
     border-radius: 5px;
     border: none;
@@ -65,11 +61,19 @@ input[type="color"] {
 }
 
 input[type="range"] {
-    width: 120px;
+    width: 100%;
 }
 
 select {
-    font-size: 16px;
+    font-size: 14px;
+}
+
+#paintCanvas {
+    width: calc(100% - 240px); /* Take up full width minus controls width */
+    height: 100vh;
+    background-color: #fff;
+    cursor: crosshair;
+    border: 1px solid #000;
 }
 
 /* Footer Styles */
