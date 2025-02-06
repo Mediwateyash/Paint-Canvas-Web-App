@@ -20,7 +20,7 @@ Check out the live demo [here](#). *(You can replace this with your actual live 
     ```bash
     cd Paint-Canvas-Web-App
     ```
-yes
+
 3. Open `index.html` in your web browser.
 
 ## Technologies Used:
